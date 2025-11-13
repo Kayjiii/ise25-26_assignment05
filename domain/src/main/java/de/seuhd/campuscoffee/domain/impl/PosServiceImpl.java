@@ -15,6 +15,7 @@ import de.seuhd.campuscoffee.domain.ports.PosService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +49,17 @@ public class PosServiceImpl implements PosService {
         return posDataService.getById(id);
     }
 
-    // TODO: Implement getByName after adding it to the PosService interface. Note that the PosDataService already supports filtering by name.
+    public @NonNull Pos getByName(@NonNull String name) throws PosNotFoundException {
+        log.debug("Retrieving POS with name: {}", name);
+        List<Pos> posList = posDataService.getAll();
+        for (Pos pos : posList) {
+            if(pos.name().equals(name)) {
+                return pos;
+            }
+        }
+        throw new PosNotFoundException("POS does not exist");
+    }
+
 
     @Override
     public @NonNull Pos upsert(@NonNull Pos pos) throws PosNotFoundException {

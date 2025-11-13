@@ -17,6 +17,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,7 @@ public class CucumberPosSteps {
     }
 
     private List<PosDto> createdPosList;
+    private List<PosDto> initialPosList;
     private PosDto updatedPos;
 
     /**
@@ -92,6 +94,11 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Given step for new scenario
+    @Given("existing POS list")
+    public void existingPOSList(List<PosDto> posList) {
+        initialPosList = createPos(posList);
+        assertThat(initialPosList).size().isEqualTo(posList.size());
+    }
 
     // When -----------------------------------------------------------------------
 
@@ -102,6 +109,14 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add When step for new scenario
+    @When("I update a POS")
+    public void iUpdateAPOS() {
+        PosDto updateePos = retrievePosByName("Schmelzpunkt");
+        updatedPos = updateePos.toBuilder().name("NewName").build();
+        List<PosDto> listUpdatedPos = new ArrayList<PosDto>();
+        listUpdatedPos.add(updatedPos);
+        updatePos(listUpdatedPos);
+    }
 
     // Then -----------------------------------------------------------------------
 
@@ -114,4 +129,9 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Then step for new scenario
+    @Then("the POS list should contain the update")
+    public void thePOSListShouldContainTheUpdate() {
+        assertThat(retrievePosByName("NewName")).isEqualToIgnoringGivenFields(updatedPos, "updatedAt");
+    }
+
 }
