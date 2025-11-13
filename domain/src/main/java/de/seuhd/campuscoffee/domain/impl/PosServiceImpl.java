@@ -51,13 +51,7 @@ public class PosServiceImpl implements PosService {
 
     public @NonNull Pos getByName(@NonNull String name) throws PosNotFoundException {
         log.debug("Retrieving POS with name: {}", name);
-        List<Pos> posList = posDataService.getAll();
-        for (Pos pos : posList) {
-            if(pos.name().equals(name)) {
-                return pos;
-            }
-        }
-        throw new PosNotFoundException("POS does not exist");
+        return posDataService.getByName(name);
     }
 
 

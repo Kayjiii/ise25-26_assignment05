@@ -112,7 +112,7 @@ public class CucumberPosSteps {
     @When("I update a POS")
     public void iUpdateAPOS() {
         PosDto updateePos = retrievePosByName("Schmelzpunkt");
-        updatedPos = updateePos.toBuilder().name("NewName").build();
+        updatedPos = updateePos.toBuilder().description("NewDesc").build();
         List<PosDto> listUpdatedPos = new ArrayList<PosDto>();
         listUpdatedPos.add(updatedPos);
         updatePos(listUpdatedPos);
@@ -128,10 +128,9 @@ public class CucumberPosSteps {
                 .containsExactlyInAnyOrderElementsOf(createdPosList);
     }
 
-    // TODO: Add Then step for new scenario
     @Then("the POS list should contain the update")
     public void thePOSListShouldContainTheUpdate() {
-        assertThat(retrievePosByName("NewName")).isEqualToIgnoringGivenFields(updatedPos, "updatedAt");
+        assertThat(retrievePosByName("Schmelzpunkt")).isEqualToIgnoringGivenFields(updatedPos, "updatedAt");
     }
 
 }
